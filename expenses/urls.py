@@ -17,10 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-
+from .views import hello_world  , home,addexpense,add_money, login_view, logout_view,register_view
+from . import views 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('expenses.urls')),
-      # Include URLs from the expenses app
+    
+    path('',home, name='home'),  # Home view
+    path('add-expense/', addexpense, name='add_expense'),
+    path('add-money/', views.add_money, name='add_money'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', views.register_view, name='register'),    
+    
+
 ]

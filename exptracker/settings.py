@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'expenses',  # Custom app for tracking expenses
 ]
 
 MIDDLEWARE = [
@@ -50,17 +51,25 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'exptracker.urls'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'  # Redirect to home after login
+LOGOUT_REDIRECT_URL = 'login' 
+
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',  # Directory for custom templates
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'expenses.context_processors.expcoin_balance', 
             ],
         },
     },
