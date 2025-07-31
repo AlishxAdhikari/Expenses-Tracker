@@ -1,0 +1,6 @@
+db.sqlite3
+expenses
+exptracker
+filelist.txt
+manage.py
+templates

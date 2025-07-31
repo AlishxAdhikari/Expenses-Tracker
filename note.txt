@@ -1,0 +1,11 @@
+
+created signal so that 
+for every  user expcoin is  created 
+
+
+2.. cereated context_processor 
+so that for everytemplate expcoin is avaialbe
+
+
+3. now i had registred cntext_processor in the templates of setting.py
+
