@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,6 +28,42 @@
             transform: translateY(-2px);
             border-radius: 4px;
         }
+
+        .hero-image {
+            max-height: 400px;
+            object-fit: cover;
+            width: 100%;
+            display: none;
+        }
+
+        .hero-image.active {
+            display: block;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            user-select: none;
+        }
+
+        .carousel-nav.prev {
+            left: 10px;
+        }
+
+        .carousel-nav.next {
+            right: 10px;
+        }
     </style>
 </head>
 
@@ -42,6 +80,8 @@
                             aria-label="Add Expense">Add Expense</a></li>
                     <li><a href="/add-money" class="text-white px-3 py-2 transition duration-300 nav-link"
                             aria-label="Add Money">Add Money</a></li>
+                    <li><a href="/expense-log" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Expense Logs">Expense Logs</a></li>
                     <li><a href="/about" class="text-white px-3 py-2 transition duration-300 nav-link"
                             aria-label="About">About</a></li>
                     <li><a href="/services" class="text-white px-3 py-2 transition duration-300 nav-link"
@@ -77,6 +117,22 @@
             {% endif %}
         </div>
     </nav>
+
+    <!-- Hero Image Carousel -->
+    <div class="container mx-auto mt-8 px-4">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden carousel-container">
+            <img src="{% static 'images/pic0.jpg' %}" alt="Expense Tracking" class="hero-image active">
+            <img src="{% static 'images/pic1.jpg' %}" alt="Expense Tracking" class="hero-image">
+            <img src="{% static 'images/pic2.jpg' %}" alt="Financial Dashboard" class="hero-image active">
+            <img src="{% static 'images/pic3.jpg' %}" alt="Budget Planning" class="hero-image">
+            <img src="{% static 'images/pic4.jpg' %}" alt="Savings Goals" class="hero-image">
+            <img src="{% static 'images/pic5.jpg' %}" alt="Investment Tracking" class="hero-image">
+            <img src="{% static 'images/pic6.jpg' %}" alt="Expense Reports" class="hero-image">
+
+            <div class="carousel-nav prev" onclick="changeSlide(-1)">&#10094;</div>
+            <div class="carousel-nav next" onclick="changeSlide(1)">&#10095;</div>
+        </div>
+    </div>
 
     <!-- Card Section -->
     <div class="container mx-auto mt-8 flex flex-col sm:flex-row gap-6 px-4">
@@ -140,6 +196,34 @@
                 Now</a>
         </div>
     </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-image');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Auto-slide every 5 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 5000);
+
+        // Show the first slide initially
+        showSlide(currentSlide);
+    </script>
 </body>
 
 </html>

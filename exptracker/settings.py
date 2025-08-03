@@ -53,9 +53,13 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'exptracker.urls'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'  # Redirect to home after login
-LOGOUT_REDIRECT_URL = 'login' 
+LOGOUT_REDIRECT_URL = 'login'  
 
+STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # this line tells Django to look in the project-level static folder
+]
 
 TEMPLATES = [
     {
@@ -76,6 +80,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'exptracker.wsgi.application'
+import os
+
 
 
 # Database

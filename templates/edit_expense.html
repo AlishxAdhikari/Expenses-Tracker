@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Expense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-custom-nav {
+            background-color: #784D92;
+        }
+
+        .bg-custom-body {
+            background-color: #D3D9D4;
+        }
+
+        .nav-link:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+
+        .logout-button:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-custom-body font-sans min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-custom-nav p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between gap-6">
+            <div class="flex items-center space-x-6">
+                <div class="text-white text-2xl font-bold">Expenses Tracker</div>
+                <ul class="flex items-center space-x-4">
+                    <li><a href="/" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Home">Home</a></li>
+                    <li><a href="/add-expense" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Add Expense">Add Expense</a></li>
+                    <li><a href="/add-money" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Add Money">Add Money</a></li>
+                    <li><a href="/about" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="About">About</a></li>
+                    <li><a href="/services" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Services">Services</a></li>
+                    <li><a href="/contact" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Contact">Contact</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
+                                aria-label="Logout">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Log In">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="flex items-center gap-4">
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    <span>👤 {{ request.user.username }}</span>
+                </div>
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    💰 <span class="font-semibold ml-2">ExpCoin: {{ expcoin_balance }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Edit Expense Form Section -->
+    <div class="container mx-auto mt-8 px-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Expense</h2>
+            <form action="{% url 'edit_expense' expense.id %}" method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="date" class="block text-gray-700 font-semibold mb-2">Date</label>
+                    <input type="date" id="date" name="date" value="{{ expense.date|date:'Y-m-d' }}"
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#784D92]"
+                        required>
+                </div>
+                <div>
+                    <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
+                    <input type="text" id="description" name="description" value="{{ expense.description }}"
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#784D92]"
+                        required>
+                </div>
+                <div>
+                    <label for="category" class="block text-gray-700 font-semibold mb-2">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="Food" {% if selected_food %}selected{% endif %}>Food</option>
+                        <option value="Transport" {% if selected_transport %}selected{% endif %}>Transport</option>
+                        <option value="Entertainment" {% if selected_entertainment %}selected{% endif %}>Entertainment
+                        </option>
+                        <option value="Bills" {% if selected_bills %}selected{% endif %}>Bills</option>
+                        <option value="Other" {% if selected_other %}selected{% endif %}>Other</option>
+                    </select>
+
+                </div>
+                <div>
+                    <label for="amount" class="block text-gray-700 font-semibold mb-2">Amount ($)</label>
+                    <input type="number" id="amount" name="amount" value="{{ expense.amount }}" step="0.01" min="0"
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#784D92]"
+                        required>
+                </div>
+                <div class="flex justify-between">
+                    <button type="submit"
+                        class="bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300">
+                        Save Changes
+                    </button>
+                    <a href="/expense-log"
+                        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

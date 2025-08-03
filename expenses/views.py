@@ -9,6 +9,8 @@ from .forms import UserRegistrationForm
 from .models import ExpCoin
 from django.contrib import messages
 
+from django.shortcuts import render, get_object_or_404
+
 def hello_world(request):
     return HttpResponse("Hello, world! This is the expenses app.")
 
@@ -95,6 +97,7 @@ def add_money(request):
 
 
 
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -129,6 +132,42 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})
 
+def expense_log(request):
+    if request.user.is_authenticated:
+        expenses = Expense.objects.filter(user=request.user)
+    else:
+        expenses = Expense.objects.none()  # Return an empty queryset if not authenticated
+
+    return render(request, 'expense_log.html', {'expenses': expenses})
+
+
+
+def edit_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id)
+
+    # Prepare selected_* variables for template
+    context = {
+        'expense': expense,
+        'selected_food': expense.category == 'Food',
+        'selected_transport': expense.category == 'Transport',
+        'selected_entertainment': expense.category == 'Entertainment',
+        'selected_bills': expense.category == 'Bills',
+        'selected_other': expense.category == 'Other',
+    }
+
+    return render(request, 'edit_expense.html', context)
+    
+
+
+
+def delete_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    if request.method == 'POST':
+        expense.delete()
+        messages.success(request, "Expense deleted successfully!")
+        return redirect('expense_log')
+
+    return render(request, 'delete_expense.html', {'expense': expense})
 
 
 
