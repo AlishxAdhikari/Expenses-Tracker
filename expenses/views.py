@@ -16,6 +16,13 @@ def hello_world(request):
 
 def home(request):
          return render(request, 'home.html')
+def services(request):
+    return render(request, 'services.html')
+def about(request):
+    return render(request, 'about.html')
+def contact(request):
+    return render(request, 'contact.html')
+
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect

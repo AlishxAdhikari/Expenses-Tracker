@@ -32,6 +32,7 @@ urlpatterns = [
     path('expense-log/', views.expense_log, name='expense_log'),
     path('edit-expense/<int:expense_id>/', views.edit_expense, name='edit_expense'),
     path('delete-expense/<int:expense_id>/', views.delete_expense, name='delete_expense'),
-    
+    path('services/', views.services, name='services'),
+    path('contact/', views.contact, name='contact'),
 
 ]

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>About Us</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .bg-custom-nav {
@@ -21,43 +21,52 @@
             border-radius: 4px;
         }
 
-        .logout-button:hover {
-            background-color: #5e3a73;
-            transform: translateY(-2px);
-            border-radius: 4px;
+        .passport-photo {
+            width: 120px;
+            height: 160px;
+            object-fit: cover;
+            border: 2px solid #784D92;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
-
-        /* Removed @apply rules. Use Tailwind utility classes directly in HTML elements. */
     </style>
 </head>
 
 <body class="bg-custom-body font-sans min-h-screen">
     <!-- Navbar -->
     <nav class="bg-custom-nav p-4 shadow-md">
-        <div class="container mx-auto flex items-center justify-between gap-6">
+        <div class="container mx-auto flex items-center justify-between">
+            <!-- Left: Brand + Links -->
             <div class="flex items-center space-x-6">
                 <div class="text-white text-2xl font-bold">Expenses Tracker</div>
-                <ul class="flex items-center space-x-4">
-                    <li><a href="{% url 'home' %}" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Home">Home</a></li>
-                    <li><a href="{% url 'add_expense' %}" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Add Expense">Add Expense</a></li>
-                    <li><a href="{% url 'add_money' %}" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Add Money">Add Money</a></li>
-                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="About">About</a></li>
-                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Services">Services</a></li>
-                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Contact">Contact</a></li>
+                <ul class="flex space-x-4">
+                    <li><a href="{% url 'home' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Home</a></li>
+                    <li><a href="{% url 'add_expense' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Expense</a></li>
+                    <li><a href="{% url 'add_money' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Money</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">About</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Services</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Contact</a></li>
                     {% if request.user.is_authenticated %}
                     <li>
                         <form action="{% url 'logout' %}" method="post" class="inline">
                             {% csrf_token %}
-                            <button type="submit" class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer" aria-label="Logout">
+                            <button type="submit"
+                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
+                                aria-label="Logout">
                                 Logout
                             </button>
                         </form>
                     </li>
                     {% else %}
-                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link" aria-label="Log In">Log In</a></li>
+                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Log In">Log In</a></li>
                     {% endif %}
                 </ul>
             </div>
+            <!-- Right: Username and ExpCoin Balance -->
             {% if request.user.is_authenticated %}
             <div class="flex items-center gap-4">
                 <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
@@ -71,47 +80,26 @@
         </div>
     </nav>
 
-    <!-- Form Section -->
-    <div class="container mx-auto mt-16 flex items-center justify-center px-4">
-        <div class="bg-white rounded-lg shadow-lg p-10 max-w-lg w-full transform transition duration-300 hover:shadow-xl">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Contact Us</h2>
-            {% if form.errors %}
-            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
-                <p class="font-semibold">Please correct the errors below:</p>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-            {% endif %}
-            <form method="POST" action="{% url 'contact' %}">
-                {% csrf_token %}
-                <div class="mb-5">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" required>
-                </div>
-                <div class="mb-5">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" required>
-                    <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
-                    <input type="text" name="name" id="name" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-5">
-                    <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
-                    <input type="email" name="email" id="email" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-5">
-                    <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
-                    <input type="text" name="subject" id="subject" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-8">
-                    <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
-                    <textarea name="message" id="message" rows="5" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
+    <!-- About Section -->
+    <div class="container mx-auto mt-8 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">About Us</h2>
+            
+            <p class="text-gray-600 mb-4">
+                Welcome to Expenses Tracker, your go-to platform for managing personal finances with ease and
+                efficiency. Our mission is to empower users to take control of their spending and savings through an
+                intuitive and user-friendly interface.
+            </p>
+            <p class="text-gray-600 mb-4">
+                Founded with the vision of simplifying financial tracking, we provide tools to log expenses, categorize
+                spending, and monitor your ExpCoin balance. Whether you're budgeting for daily needs or planning for the
+                future, Expenses Tracker is here to support you every step of the way.
+            </p>
+            <p class="text-gray-600">
+                Join our community of users who are making smarter financial decisions. We are committed to continuously
+                improving our platform to meet your needs.
+            </p>
+        </div>
     </div>
 </body>
 

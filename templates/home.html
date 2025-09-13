@@ -8,23 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Spline Viewer Script
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.46/build/spline-viewer.js"></script> -->
+
     <style>
+        /* Dark Theme */
         .bg-custom-nav {
-            background-color: #784D92;
+            background-color: #111111;
         }
 
         .bg-custom-body {
-            background-color: #D3D9D4;
+            background-color: #000000;
         }
 
-        .nav-link:hover {
-            background-color: #5e3a73;
-            transform: translateY(-2px);
-            border-radius: 4px;
-        }
-
+        .nav-link:hover,
         .logout-button:hover {
-            background-color: #5e3a73;
+            background-color: #222222;
             transform: translateY(-2px);
             border-radius: 4px;
         }
@@ -43,13 +43,14 @@
         .carousel-container {
             position: relative;
             overflow: hidden;
+            background-color: #111111;
         }
 
         .carousel-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             padding: 10px;
             cursor: pointer;
@@ -64,53 +65,82 @@
         .carousel-nav.next {
             right: 10px;
         }
+
+        /* Spline Viewer
+        spline-viewer {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+            position: relative;
+        }
+
+        /* Hide Spline watermark by overlaying a black box */
+        /* .spline-wrapper {
+            position: relative;
+        }
+
+        .spline-wrapper::after {
+            content: "";
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            width: 180px;
+            height: 60px;
+            background: #ffffff;
+            z-index: 9999;
+            border-radius: 12px;
+        } */ */
+
+        /* Footer Styles */
+        .footer-link:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
-<body class="bg-custom-body font-sans min-h-screen">
+<body class="bg-custom-body font-sans text-white min-h-screen">
     <!-- Navbar -->
     <nav class="bg-custom-nav p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between gap-6">
             <div class="flex items-center space-x-6">
                 <div class="text-white text-2xl font-bold">Expenses Tracker</div>
                 <ul class="flex items-center space-x-4">
-                    <li><a href="/" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Home">Home</a></li>
-                    <li><a href="/add-expense" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Add Expense">Add Expense</a></li>
-                    <li><a href="/add-money" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Add Money">Add Money</a></li>
-                    <li><a href="/expense-log" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Expense Logs">Expense Logs</a></li>
-                    <li><a href="/about" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="About">About</a></li>
-                    <li><a href="/services" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Services">Services</a></li>
-                    <li><a href="/contact" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Contact">Contact</a></li>
+                    <li><a href="/" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Home</a></li>
+                    <li><a href="/add-expense" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Add
+                            Expense</a></li>
+                    <li><a href="/add-money" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Add
+                            Money</a></li>
+                    <li><a href="/expense-log" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Expense
+                            Logs</a></li>
+                    <li><a href="/about" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">About</a></li>
+                    <li><a href="/services"
+                            class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Services</a></li>
+                    <li><a href="/contact" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Contact</a>
+                    </li>
                     {% if request.user.is_authenticated %}
                     <li>
                         <form action="{% url 'logout' %}" method="post" class="inline">
                             {% csrf_token %}
                             <button type="submit"
-                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
-                                aria-label="Logout">
+                                class="text-gray-200 px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer">
                                 Logout
                             </button>
                         </form>
                     </li>
                     {% else %}
-                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
-                            aria-label="Log In">Log In</a></li>
+                    <li><a href="{% url 'login' %}" class="text-gray-200 px-3 py-2 transition duration-300 nav-link">Log
+                            In</a></li>
                     {% endif %}
                 </ul>
             </div>
             {% if request.user.is_authenticated %}
             <div class="flex items-center gap-4">
-                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                <div class="bg-gray-900 text-gray-200 px-4 py-2 rounded-lg shadow flex items-center">
                     <span>👤 {{ request.user.username }}</span>
                 </div>
-                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                <div class="bg-gray-900 text-gray-200 px-4 py-2 rounded-lg shadow flex items-center">
                     💰 <span class="font-semibold ml-2">ExpCoin: {{ expcoin_balance }}</span>
                 </div>
             </div>
@@ -118,12 +148,19 @@
         </div>
     </nav>
 
+    <!-- Spline Section
+    <div class="container mx-auto mt-8 px-4">
+        <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden spline-wrapper">
+            <spline-viewer url="https://prod.spline.design/TdoFS63265TFoY39/scene.splinecode"></spline-viewer>
+        </div>
+    </div> -->
+
     <!-- Hero Image Carousel -->
     <div class="container mx-auto mt-8 px-4">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden carousel-container">
+        <div class="rounded-lg shadow-lg overflow-hidden carousel-container">
             <img src="{% static 'images/pic0.jpg' %}" alt="Expense Tracking" class="hero-image active">
             <img src="{% static 'images/pic1.jpg' %}" alt="Expense Tracking" class="hero-image">
-            <img src="{% static 'images/pic2.jpg' %}" alt="Financial Dashboard" class="hero-image active">
+            <img src="{% static 'images/pic2.jpg' %}" alt="Financial Dashboard" class="hero-image">
             <img src="{% static 'images/pic3.jpg' %}" alt="Budget Planning" class="hero-image">
             <img src="{% static 'images/pic4.jpg' %}" alt="Savings Goals" class="hero-image">
             <img src="{% static 'images/pic5.jpg' %}" alt="Investment Tracking" class="hero-image">
@@ -135,68 +172,127 @@
     </div>
 
     <!-- Card Section -->
-    <div class="container mx-auto mt-8 flex flex-col sm:flex-row gap-6 px-4">
+    <div class="container mx-auto mt-8 flex flex-col sm:flex-row gap-6 px-4 flex-wrap">
         <!-- Card 1 -->
         <div
-            class="bg-white rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            class="bg-gray-900 text-gray-200 rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="static/images/graph.png"
                 alt="Explore" class="w-full h-40 object-cover rounded-t-lg mb-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Explore</h2>
-            <p class="text-gray-600 mb-4">Discover amazing content tailored for you. Start your journey now!</p>
+            <h2 class="text-2xl font-bold mb-4">Graph</h2>
+            <p class="mb-4">Discover amazing content tailored for you. Start your journey now!</p>
             <a href="/explore"
-                class="inline-block bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300 hover:scale-105">Learn
+                class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition duration-300 hover:scale-105">Learn
                 More</a>
         </div>
 
         <!-- Card 2 -->
         <div
-            class="bg-white rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <img src="https://images.unsplash.com/photo-1516321310762-37f3d7a2b563?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            class="bg-gray-900 text-gray-200 rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://images.unsplash.com/photo-1516321310762-37f3d7a2b563?auto=format&fit=crop&w=500&q=60"
                 alt="Connect" class="w-full h-40 object-cover rounded-t-lg mb-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Connect</h2>
-            <p class="text-gray-600 mb-4">Join our community and connect with like-minded people today!</p>
+            <h2 class="text-2xl font-bold mb-4">Connect</h2>
+            <p class="mb-4">Join our community and connect with like-minded people today!</p>
             <a href="/connect"
-                class="inline-block bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300 hover:scale-105">Join
+                class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition duration-300 hover:scale-105">Join
                 Now</a>
         </div>
 
         <!-- Card 3 -->
         <div
-            class="bg-white rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <img src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            class="bg-gray-900 text-gray-200 rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=500&q=60"
                 alt="Grow" class="w-full h-40 object-cover rounded-t-lg mb-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Grow</h2>
-            <p class="text-gray-600 mb-4">Unlock your potential with our exclusive resources and tools.</p>
+            <h2 class="text-2xl font-bold mb-4">Grow</h2>
+            <p class="mb-4">Unlock your potential with our exclusive resources and tools.</p>
             <a href="/grow"
-                class="inline-block bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300 hover:scale-105">Get
+                class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition duration-300 hover:scale-105">Get
                 Started</a>
         </div>
 
         <!-- Card 4 -->
         <div
-            class="bg-white rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21a22f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            class="bg-gray-900 text-gray-200 rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21a22f?auto=format&fit=crop&w=500&q=60"
                 alt="Save" class="w-full h-40 object-cover rounded-t-lg mb-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Save</h2>
-            <p class="text-gray-600 mb-4">Plan your finances and save more with our budgeting tools.</p>
+            <h2 class="text-2xl font-bold mb-4">Save</h2>
+            <p class="mb-4">Plan your finances and save more with our budgeting tools.</p>
             <a href="/save"
-                class="inline-block bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300 hover:scale-105">Start
+                class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition duration-300 hover:scale-105">Start
                 Saving</a>
         </div>
 
         <!-- Card 5 -->
         <div
-            class="bg-white rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            class="bg-gray-900 text-gray-200 rounded-lg shadow-lg p-6 max-w-sm transform transition duration-300 hover:scale-105 hover:shadow-xl">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=60"
                 alt="Track" class="w-full h-40 object-cover rounded-t-lg mb-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Track</h2>
-            <p class="text-gray-600 mb-4">Monitor your expenses in real-time with our tracking features.</p>
+            <h2 class="text-2xl font-bold mb-4">Track</h2>
+            <p class="mb-4">Monitor your expenses in real-time with our tracking features.</p>
             <a href="/track"
-                class="inline-block bg-custom-nav text-white px-4 py-2 rounded hover:bg-[#5e3a73] transition duration-300 hover:scale-105">Track
+                class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition duration-300 hover:scale-105">Track
                 Now</a>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-custom-nav text-gray-200 py-8 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between gap-8">
+                <!-- Navigation Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Home</a></li>
+                        <li><a href="/about"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">About</a>
+                        </li>
+                        <li><a href="/services"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Services</a>
+                        </li>
+                        <li><a href="/contact"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Contact</a>
+                        </li>
+                        <li><a href="/add-expense"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Add
+                                Expense</a></li>
+                        <li><a href="/expense-log"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Expense
+                                Logs</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+                    <p class="text-gray-400 mb-2">Email: <a href="mailto:support@expensestracker.com"
+                            class="hover:text-white transition duration-300 footer-link">support@expensestracker.com</a>
+                    </p>
+                    <p class="text-gray-400 mb-2">Phone: +1 (555) 123-4567</p>
+                    <p class="text-gray-400">Address: 123 Budget Lane, Finance City, FC 12345</p>
+                </div>
+                <!-- Social Media or Additional Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Follow Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://twitter.com/expensestracker"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Twitter</a>
+                        </li>
+                        <li><a href="https://facebook.com/expensestracker"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">Facebook</a>
+                        </li>
+                        <li><a href="https://linkedin.com/company/expensestracker"
+                                class="text-gray-400 hover:text-white transition duration-300 footer-link">LinkedIn</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-400">
+                <p>&copy; {% now "Y" %} Expenses Tracker. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Carousel Script -->
     <script>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.hero-image');
@@ -216,12 +312,10 @@
             showSlide(currentSlide);
         }
 
-        // Auto-slide every 5 seconds
         setInterval(() => {
             changeSlide(1);
         }, 5000);
 
-        // Show the first slide initially
         showSlide(currentSlide);
     </script>
 </body>
