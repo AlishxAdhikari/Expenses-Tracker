@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deposit Funds | Expense Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --accent-green: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.15);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030303;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glow-sphere {
+            position: fixed;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--accent-green);
+            outline: none;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) hue-rotate(90deg);
+            cursor: pointer;
+        }
+
+        .btn-deposit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.4s ease;
+        }
+
+        .btn-deposit:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .success-glow {
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { text-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+            50% { text-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
+            100% { text-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <div class="glow-sphere top-[-10%] right-[-10%]"></div>
+    <div class="glow-sphere bottom-[-10%] left-[-10%]" style="--accent-glow: rgba(139, 92, 246, 0.1);"></div>
+
+    <nav class="fixed w-full z-[100] glass border-b border-white/5">
+        <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-12">
+                <a href="/" class="text-white text-2xl font-black tracking-tighter flex items-center gap-2 group">
+                    <div class="p-2 bg-purple-600 rounded-lg group-hover:rotate-12 transition-transform">
+                        <i data-lucide="activity" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span>EXPENSE<span class="text-purple-500">TRACKER</span></span>
+                </a>
+                <ul class="hidden lg:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                    <li><a href="/" class="hover:text-purple-400 transition">Dashboard</a></li>
+                    <li><a href="/add-expense" class="hover:text-purple-400 transition">Transaction</a></li>
+                    <li><a href="/add-money" class="text-white border-b-2 border-emerald-500 pb-1">Add Money</a></li>
+                    <li><a href="/expense-log" class="hover:text-purple-400 transition">Ledger</a></li>
+                    <li><a href="/services" class="hover:text-purple-400 transition">Services</a></li>
+                </ul>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                {% if request.user.is_authenticated %}
+                <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white/5 rounded-2xl border border-white/10">
+                    <div class="text-right leading-none">
+                        <p class="text-[9px] uppercase text-gray-500 font-bold mb-1">Vault Balance</p>
+                        <p class="text-sm font-black text-emerald-400">{{ expcoin_balance }} EC</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="min-h-screen flex items-center justify-center pt-24 px-6 pb-12">
+        <div class="max-w-md w-full" data-aos="fade-up">
+            
+            <div class="text-center mb-10">
+                <div class="inline-block p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                    <i data-lucide="trending-up" class="w-6 h-6 text-emerald-500"></i>
+                </div>
+                <h1 class="text-3xl font-black tracking-tight mb-2 uppercase text-white">Income <span class="text-emerald-500">Injection</span></h1>
+                <p class="text-gray-500 text-sm font-medium">Log new capital to update your ExpCoin leverage.</p>
+            </div>
+
+            <div class="glass p-8 md:p-10 rounded-[3rem] border-white/10 shadow-2xl">
+                <form method="POST" action="{% url 'add_money' %}" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 ml-1">Income Source</label>
+                        <input type="text" name="description" placeholder="e.g. Monthly Salary" 
+                            class="input-field w-full px-5 py-3.5 rounded-2xl text-sm" required>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 ml-1">Category</label>
+                            <select name="category" class="input-field w-full px-5 py-3.5 rounded-2xl text-sm appearance-none" required>
+                                <option value="Salary">Salary</option>
+                                <option value="Freelance">Freelance</option>
+                                <option value="Investment">Investment</option>
+                                <option value="Gift">Gift</option>
+                                <option value="Other" selected>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 ml-1">Arrival Date</label>
+                            <input type="date" name="date" id="dateInput" class="input-field w-full px-5 py-3.5 rounded-2xl text-sm" required>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 ml-1">Credit Amount (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-emerald-500">$</span>
+                            <input type="number" name="amount" id="amountInput" step="0.01" min="0.01" placeholder="0.00" 
+                                class="input-field w-full pl-14 pr-6 py-6 rounded-[2rem] text-3xl font-black text-white" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-deposit w-full py-5 rounded-[2rem] text-white font-extrabold text-sm uppercase tracking-widest flex items-center justify-center gap-3">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Confirm Deposit
+                    </button>
+                </form>
+            </div>
+
+            <p class="text-center text-gray-600 text-[10px] mt-8 uppercase tracking-widest font-bold">
+                <i data-lucide="shield" class="inline w-3 h-3 mr-1 text-emerald-500"></i> Verified Secure Entry
+            </p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 800, once: true });
+        
+        // Default date to today
+        document.getElementById('dateInput').valueAsDate = new Date();
+
+        // Amount dynamic interaction for button glow
+        const amountInput = document.getElementById('amountInput');
+        const submitBtn = document.querySelector('.btn-deposit');
+        
+        amountInput.addEventListener('input', (e) => {
+            if (e.target.value > 0) {
+                submitBtn.classList.add('success-glow');
+            } else {
+                submitBtn.classList.remove('success-glow');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story | Expense Tracker Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.15);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030303;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glow-sphere {
+            position: fixed;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-frame {
+            position: relative;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.3), transparent);
+            border-radius: 3rem;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <div class="glow-sphere top-[-10%] left-[-10%]"></div>
+    <div class="glow-sphere bottom-[-10%] right-[-10%]" style="--accent-glow: rgba(236, 72, 153, 0.1);"></div>
+
+    <nav class="fixed w-full z-[100] glass border-b border-white/5">
+        <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-12">
+                <a href="/" class="text-white text-2xl font-black tracking-tighter flex items-center gap-2 group">
+                    <div class="p-2 bg-purple-600 rounded-lg group-hover:rotate-12 transition-transform">
+                        <i data-lucide="activity" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span>EXPENSE<span class="text-purple-500">TRACKER</span></span>
+                </a>
+                <ul class="hidden lg:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                    <li><a href="/" class="hover:text-purple-400 transition">Dashboard</a></li>
+                    <li><a href="/add-expense" class="hover:text-purple-400 transition">Transaction</a></li>
+                    <li><a href="/expense-log" class="hover:text-purple-400 transition">Ledger</a></li>
+                    <li><a href="/services" class="hover:text-purple-400 transition">Services</a></li>
+                    <li><a href="/about" class="text-white border-b-2 border-purple-500 pb-1">About</a></li>
+                </ul>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                {% if request.user.is_authenticated %}
+                <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white/5 rounded-2xl border border-white/10">
+                    <div class="text-right leading-none">
+                        <p class="text-[9px] uppercase text-gray-500 font-bold mb-1">Vault Balance</p>
+                        <p class="text-sm font-black text-emerald-400">{{ expcoin_balance }} EC</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto pt-40 px-6 pb-20">
+        
+        <div class="max-w-4xl mx-auto text-center mb-24" data-aos="fade-up">
+            <h2 class="text-purple-500 font-bold tracking-[0.4em] uppercase text-[10px] mb-4">The Vision</h2>
+            <h1 class="text-6xl md:text-7xl font-black tracking-tight mb-8">
+                Empowering <br> <span class="text-gradient italic">Financial Freedom.</span>
+            </h1>
+            <p class="text-gray-400 text-xl leading-relaxed font-light">
+                Expense Tracker was built to bridge the gap between chaotic spending and conscious wealth creation. 
+                We don't just log numbers; we map your journey toward stability.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
+            <div class="glass p-12 rounded-[3rem] border-white/10" data-aos="fade-right">
+                <i data-lucide="compass" class="text-purple-500 w-10 h-10 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Our Purpose</h3>
+                <p class="text-gray-500 leading-relaxed">
+                    In an age of digital transactions, it's easy to lose track of capital. Our mission is to provide an 
+                    enterprise-grade interface for personal use, making complex financial tracking accessible to everyone.
+                </p>
+            </div>
+            <div class="glass p-12 rounded-[3rem] border-white/10" data-aos="fade-left">
+                <i data-lucide="award" class="text-emerald-500 w-10 h-10 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">The ExpCoin Edge</h3>
+                <p class="text-gray-500 leading-relaxed">
+                    We pioneered the "Log-to-Earn" concept. By gamifying financial responsibility through our 
+                    ExpCoin rewards system, we ensure that users stay engaged with their long-term goals.
+                </p>
+            </div>
+        </div>
+
+        <div class="glass rounded-[4rem] overflow-hidden p-8 md:p-16 border-white/10 relative" data-aos="zoom-in">
+            <div class="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                <div class="w-full md:w-1/3">
+                    <div class="profile-frame">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?fit=crop&w=800&q=80" 
+                             alt="Founder" class="rounded-[2.5rem] w-full aspect-[4/5] object-cover filter grayscale hover:grayscale-0 transition-all duration-700">
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <h4 class="text-purple-500 font-bold uppercase tracking-widest text-xs mb-2">Chief Executive</h4>
+                    <h2 class="text-4xl font-black mb-6 italic">"Tracking is the first step to owning your future."</h2>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8 font-light italic">
+                        "We didn't want to build just another spreadsheet. We wanted to build a financial cockpit. 
+                        A place where every transaction feels meaningful and every saved dollar is celebrated."
+                    </p>
+                    <div>
+                        <p class="text-white font-bold text-xl">Arthur Sterling</p>
+                        <p class="text-gray-500 text-sm">Founder & Lead Architect</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center border-t border-white/5">
+        <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.3em]">
+            © 2026 Expense Tracker Intelligence. All Rights Reserved.
+        </p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+
+</html>

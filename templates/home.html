@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses Tracker | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #050505;
+            color: #e2e8f0;
+        }
+
+        .glass {
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Improved Carousel Transition */
+        .hero-image {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out, transform 2s ease-out;
+            transform: scale(1.1);
+        }
+
+        .hero-image.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #8b5cf6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333; }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <nav class="fixed w-full z-50 glass border-b border-white/5">
+        <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <div class="text-white text-2xl font-black tracking-tighter flex items-center gap-2">
+                    <i data-lucide="wallet" class="text-purple-500"></i> EXPENSES
+                </div>
+                <ul class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-gray-400">
+                    <li><a href="/" class="hover:text-white transition nav-link">Home</a></li>
+                    <li><a href="/add-expense" class="hover:text-white transition nav-link">Add Expense</a></li>
+                    <li><a href="/expense-log" class="hover:text-white transition nav-link">Logs</a></li>
+                    <li><a href="/about" class="hover:text-white transition nav-link">About</a></li>
+                    <li><a href="/contact" class="hover:text-white transition nav-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="flex items-center gap-4">
+                {% if request.user.is_authenticated %}
+                <div class="hidden sm:flex items-center gap-3 mr-4">
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Balance</p>
+                        <p class="text-sm font-bold text-emerald-400">{{ expcoin_balance }} EC</p>
+                    </div>
+                    <div class="h-8 w-8 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xs">
+                        {{ request.user.username|slice:":1"|upper }}
+                    </div>
+                </div>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-white/5 hover:bg-red-500/20 hover:text-red-400 border border-white/10 px-4 py-2 rounded-lg text-xs font-bold transition-all">
+                        LOGOUT
+                    </button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full text-sm font-bold transition">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20">
+        <div class="container mx-auto mt-8 px-4">
+            <div class="relative h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/5">
+                <img src="{% static 'images/pic0.jpg' %}" class="hero-image object-cover w-full h-full active">
+                <img src="{% static 'images/pic1.jpg' %}" class="hero-image object-cover w-full h-full">
+                <img src="{% static 'images/pic2.jpg' %}" class="hero-image object-cover w-full h-full">
+                <img src="{% static 'images/pic3.jpg' %}" class="hero-image object-cover w-full h-full">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex flex-col justify-end p-12">
+                    <h2 class="text-5xl font-black tracking-tighter mb-4" data-aos="fade-up">Master Your <span class="text-purple-500">Finances.</span></h2>
+                    <p class="text-gray-300 max-w-lg mb-6" data-aos="fade-up" data-aos-delay="100">Track every penny with our smart ExpCoin system. Real-time insights, beautiful reports.</p>
+                    <div class="flex gap-4" data-aos="fade-up" data-aos-delay="200">
+                        <button class="bg-purple-600 px-8 py-3 rounded-xl font-bold hover:scale-105 transition">Quick Start</button>
+                        <button class="bg-white/10 backdrop-blur-md px-8 py-3 rounded-xl font-bold hover:bg-white/20 transition">View Logs</button>
+                    </div>
+                </div>
+
+                <button onclick="changeSlide(-1)" class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-purple-600 transition-colors z-20">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button onclick="changeSlide(1)" class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-purple-600 transition-colors z-20">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mx-auto py-20 px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            
+            <div class="glass p-6 rounded-3xl hover:border-purple-500/50 transition-all group cursor-pointer" data-aos="fade-up">
+                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-square">
+                    <img src="static/images/graph.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Visual Analytics</h3>
+                <p class="text-gray-500 text-sm mb-6 leading-relaxed">See your spending patterns come to life with dynamic charts.</p>
+                <a href="/explore" class="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-widest hover:gap-4 transition-all">
+                    Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="glass p-6 rounded-3xl hover:border-purple-500/50 transition-all group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-square bg-slate-800">
+                    <img src="https://images.unsplash.com/photo-1516321310762-37f3d7a2b563?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                <h3 class="text-xl font-bold mb-2">Smart Connect</h3>
+                <p class="text-gray-500 text-sm mb-6">Sync your accounts and collaborate with your team or family.</p>
+                <a href="/connect" class="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-widest hover:gap-4 transition-all">
+                    Join Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            </div>
+    </section>
+
+    <footer class="bg-[#0a0a0a] pt-20 pb-10 border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="text-2xl font-black text-white mb-6 tracking-tighter">EXPENSES.</div>
+                    <p class="text-gray-500 text-sm leading-relaxed">Revolutionizing the way you track and manage your daily finances. Built with speed and security in mind.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6 italic">Quick Links</h4>
+                    <ul class="grid grid-cols-2 gap-4 text-sm text-gray-500 font-medium">
+                        <li><a href="/" class="hover:text-purple-400 transition">Dashboard</a></li>
+                        <li><a href="/about" class="hover:text-purple-400 transition">History</a></li>
+                        <li><a href="/services" class="hover:text-purple-400 transition">Security</a></li>
+                        <li><a href="/contact" class="hover:text-purple-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6 italic">Stay Connected</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-600 transition"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-purple-600 transition"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-10 border-t border-white/5 text-center">
+                <p class="text-gray-600 text-[10px] font-bold tracking-[0.2em] uppercase">
+                    &copy; {% now "Y" %} Expenses Tracker. Designed for the future.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+
+        // Smooth Carousel Script
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-image');
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Auto-play with pause on hover
+        let slideInterval = setInterval(() => changeSlide(1), 6000);
+        
+        document.querySelector('.relative').addEventListener('mouseenter', () => clearInterval(slideInterval));
+        document.querySelector('.relative').addEventListener('mouseleave', () => slideInterval = setInterval(() => changeSlide(1), 6000));
+    </script>
+</body>
+
+</html>

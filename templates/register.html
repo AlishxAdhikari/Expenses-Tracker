@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-custom-nav {
+            background-color: #784D92;
+        }
+
+        .bg-custom-body {
+            background-color: #D3D9D4;
+        }
+
+        .nav-link:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+
+        .logout-button:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        input:focus {
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-custom-body font-sans min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-custom-nav p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between gap-6">
+            <div class="flex items-center space-x-6">
+                <div class="text-white text-2xl font-bold">Expenses Tracker</div>
+                <ul class="flex items-center space-x-4">
+                    <li><a href="{% url 'home' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Home">Home</a></li>
+                    <li><a href="{% url 'add_expense' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Add Expense">Add Expense</a></li>
+                    <li><a href="{% url 'add_money' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Add Money">Add Money</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="About">About</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Contact">Contact</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
+                                aria-label="Logout">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Log In">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                💰 <span class="font-semibold ml-2">Dollar: ${{ dollar_balance }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Form Section -->
+    <div class="container mx-auto mt-16 flex items-center justify-center px-4">
+        <div
+            class="bg-white rounded-lg shadow-lg p-10 max-w-lg w-full transform transition duration-300 hover:shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Register</h2>
+            {% if form.errors %}
+            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
+                <p class="font-semibold">Please correct the errors below:</p>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="mb-5">
+                    <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
+                    <input type="text" name="username" id="username"
+                        class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div class="mb-5">
+                    <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                    <input type="email" name="email" id="email"
+                        class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div class="mb-5">
+                    <label for="password1" class="block text-gray-700 font-medium mb-2">Password</label>
+                    <input type="password" name="password1" id="password1"
+                        class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div class="mb-8">
+                    <label for="password2" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                    <input type="password" name="password2" id="password2"
+                        class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-custom-nav text-white px-4 py-3 rounded-lg hover:bg-[#5e3a73] transition duration-300 transform hover:scale-105">
+                    Register
+                </button>
+            </form>
+            <p class="mt-6 text-center text-gray-600 text-sm">
+                Already have an account? <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Log in
+                    here</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systems & Services | Expense Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.15);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030303;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glow-sphere {
+            position: fixed;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-10px);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <div class="glow-sphere top-[-10%] right-[-10%]"></div>
+    <div class="glow-sphere bottom-[-10%] left-[-10%]" style="--accent-glow: rgba(16, 185, 129, 0.1);"></div>
+
+    <nav class="fixed w-full z-[100] glass border-b border-white/5">
+        <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-12">
+                <a href="/" class="text-white text-2xl font-black tracking-tighter flex items-center gap-2 group">
+                    <div class="p-2 bg-purple-600 rounded-lg group-hover:rotate-12 transition-transform">
+                        <i data-lucide="activity" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span>EXPENSE<span class="text-purple-500">TRACKER</span></span>
+                </a>
+                <ul class="hidden lg:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                    <li><a href="/" class="hover:text-purple-400 transition">Dashboard</a></li>
+                    <li><a href="/add-expense" class="hover:text-purple-400 transition">Transaction</a></li>
+                    <li><a href="/expense-log" class="hover:text-purple-400 transition">Ledger</a></li>
+                    <li><a href="/services" class="text-white border-b-2 border-purple-500 pb-1">Services</a></li>
+                    <li><a href="/about" class="hover:text-purple-400 transition">About</a></li>
+                </ul>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                {% if request.user.is_authenticated %}
+                <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white/5 rounded-2xl border border-white/10">
+                    <div class="text-right leading-none">
+                        <p class="text-[9px] uppercase text-gray-500 font-bold mb-1">Vault Balance</p>
+                        <p class="text-sm font-black text-emerald-400">{{ expcoin_balance }} EC</p>
+                    </div>
+                </div>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="p-2.5 hover:bg-red-500/10 hover:text-red-500 transition rounded-xl">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto pt-40 px-6 pb-24">
+        <div class="text-center max-w-3xl mx-auto mb-20" data-aos="fade-up">
+            <h2 class="text-purple-500 font-bold tracking-[0.3em] uppercase text-xs mb-4">Core Capabilities</h2>
+            <h1 class="text-5xl md:text-6xl font-black tracking-tight mb-6">Financial <span class="text-gradient">Intelligence</span></h1>
+            <p class="text-gray-500 leading-relaxed">
+                Unlock the full potential of your capital with our specialized tracking and reward modules.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="service-card glass p-10 rounded-[2.5rem] relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-14 h-14 bg-purple-600/20 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/30">
+                    <i data-lucide="database" class="text-purple-500 w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Precision Ledger</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                    A high-performance transaction engine that logs every cent with millisecond precision. Search, filter, and export your data instantly.
+                </p>
+                <div class="text-[10px] font-black uppercase tracking-widest text-purple-400">Status: Active</div>
+            </div>
+
+            <div class="service-card glass p-10 rounded-[2.5rem] relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-14 h-14 bg-emerald-600/20 rounded-2xl flex items-center justify-center mb-8 border border-emerald-500/30">
+                    <i data-lucide="coins" class="text-emerald-500 w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">ExpCoin Mining</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                    Turn your financial discipline into assets. Earn ExpCoin for consistent logging and smart budgeting. Your balance is your proof of work.
+                </p>
+                <div class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Status: Earning</div>
+            </div>
+
+            <div class="service-card glass p-10 rounded-[2.5rem] relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-14 h-14 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/30">
+                    <i data-lucide="bar-chart-3" class="text-blue-500 w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Insight Metrics</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                    Visualize your spending patterns through dynamic heatmaps and category distribution charts. Know where your money goes before it leaves.
+                </p>
+                <div class="text-[10px] font-black uppercase tracking-widest text-blue-400">Status: Real-time</div>
+            </div>
+
+        </div>
+
+        <div class="mt-20 glass p-8 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6" data-aos="fade-up">
+            <div class="flex items-center gap-4">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Global Financial Network Online</span>
+            </div>
+            <button class="bg-white text-black px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-purple-500 hover:text-white transition-all">
+                Upgrade to Enterprise
+            </button>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+
+</html>

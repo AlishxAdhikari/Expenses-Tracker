@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-custom-nav {
+            background-color: #784D92;
+        }
+
+        .bg-custom-body {
+            background-color: #D3D9D4;
+        }
+
+        .nav-link:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-custom-body font-sans min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-custom-nav p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <!-- Left: Brand + Links -->
+            <div class="flex items-center space-x-6">
+                <div class="text-white text-2xl font-bold">Expenses Tracker</div>
+                <ul class="flex space-x-4">
+                    <li><a href="{% url 'home' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Home</a></li>
+                    <li><a href="{% url 'add_expense' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Expense</a></li>
+                    <li><a href="{% url 'add_money' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Money</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">About</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Services</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Contact</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
+                                aria-label="Logout">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Log In">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- Right: Username and ExpCoin Balance -->
+            {% if request.user.is_authenticated %}
+            <div class="flex items-center gap-4">
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    <span>👤 {{ request.user.username }}</span>
+                </div>
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    💰 <span class="font-semibold ml-2">ExpCoin: {{ expcoin_balance }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Services Section -->
+    <div class="container mx-auto mt-8 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Our Services</h2>
+            <ul class="list-disc list-inside text-gray-600 space-y-4">
+                <li><strong>Expense Tracking:</strong> Easily log and categorize your expenses to keep track of your
+                    spending habits.</li>
+                <li><strong>Budget Management:</strong> Set budgets for different categories and monitor your financial
+                    goals.</li>
+                <li><strong>ExpCoin System:</strong> Manage your virtual currency balance to stay on top of your
+                    financial transactions.</li>
+                <li><strong>Secure Authentication:</strong> Safe and secure login system to protect your financial data.
+                </li>
+                <li><strong>User-Friendly Interface:</strong> Intuitive design to make financial management accessible
+                    for everyone.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

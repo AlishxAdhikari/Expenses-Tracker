@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-custom-nav {
+            background-color: #784D92;
+        }
+
+        .bg-custom-body {
+            background-color: #D3D9D4;
+        }
+
+        .nav-link:hover {
+            background-color: #5e3a73;
+            transform: translateY(-2px);
+            border-radius: 4px;
+        }
+
+        .passport-photo {
+            width: 120px;
+            height: 160px;
+            object-fit: cover;
+            border: 2px solid #784D92;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-custom-body font-sans min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-custom-nav p-4 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <!-- Left: Brand + Links -->
+            <div class="flex items-center space-x-6">
+                <div class="text-white text-2xl font-bold">Expenses Tracker</div>
+                <ul class="flex space-x-4">
+                    <li><a href="{% url 'home' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Home</a></li>
+                    <li><a href="{% url 'add_expense' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Expense</a></li>
+                    <li><a href="{% url 'add_money' %}"
+                            class="text-white px-3 py-2 transition duration-300 nav-link">Add Money</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">About</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Services</a></li>
+                    <li><a href="#" class="text-white px-3 py-2 transition duration-300 nav-link">Contact</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="text-white px-3 py-2 transition duration-300 logout-button bg-transparent border-none cursor-pointer"
+                                aria-label="Logout">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}" class="text-white px-3 py-2 transition duration-300 nav-link"
+                            aria-label="Log In">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- Right: Username and ExpCoin Balance -->
+            {% if request.user.is_authenticated %}
+            <div class="flex items-center gap-4">
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    <span>👤 {{ request.user.username }}</span>
+                </div>
+                <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow flex items-center">
+                    💰 <span class="font-semibold ml-2">ExpCoin: {{ expcoin_balance }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <div class="container mx-auto mt-8 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">About Us</h2>
+            
+            <p class="text-gray-600 mb-4">
+                Welcome to Expenses Tracker, your go-to platform for managing personal finances with ease and
+                efficiency. Our mission is to empower users to take control of their spending and savings through an
+                intuitive and user-friendly interface.
+            </p>
+            <p class="text-gray-600 mb-4">
+                Founded with the vision of simplifying financial tracking, we provide tools to log expenses, categorize
+                spending, and monitor your ExpCoin balance. Whether you're budgeting for daily needs or planning for the
+                future, Expenses Tracker is here to support you every step of the way.
+            </p>
+            <p class="text-gray-600">
+                Join our community of users who are making smarter financial decisions. We are committed to continuously
+                improving our platform to meet your needs.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
